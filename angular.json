@@ -1,0 +1,191 @@
+{
+  "version": 1,
+  "projects": {
+    "memo-client": {
+      "projectType": "application",
+      "schematics": {
+        "@schematics/angular:component": {
+          "style": "scss"
+        }
+      },
+      "root": "apps/memo-client",
+      "sourceRoot": "apps/memo-client/src",
+      "prefix": "memo",
+      "architect": {
+        "build": {
+          "builder": "@angular-devkit/build-angular:browser",
+          "options": {
+            "outputPath": "dist/apps/memo-client",
+            "index": "apps/memo-client/src/index.html",
+            "main": "apps/memo-client/src/main.ts",
+            "polyfills": "apps/memo-client/src/polyfills.ts",
+            "tsConfig": "apps/memo-client/tsconfig.app.json",
+            "aot": true,
+            "assets": [
+              "apps/memo-client/src/favicon.ico",
+              "apps/memo-client/src/assets"
+            ],
+            "styles": ["apps/memo-client/src/styles.scss"],
+            "scripts": []
+          },
+          "configurations": {
+            "production": {
+              "fileReplacements": [
+                {
+                  "replace": "apps/memo-client/src/environments/environment.ts",
+                  "with": "apps/memo-client/src/environments/environment.prod.ts"
+                }
+              ],
+              "optimization": true,
+              "outputHashing": "all",
+              "sourceMap": false,
+              "extractCss": true,
+              "namedChunks": false,
+              "extractLicenses": true,
+              "vendorChunk": false,
+              "buildOptimizer": true,
+              "budgets": [
+                {
+                  "type": "initial",
+                  "maximumWarning": "2mb",
+                  "maximumError": "5mb"
+                },
+                {
+                  "type": "anyComponentStyle",
+                  "maximumWarning": "6kb",
+                  "maximumError": "10kb"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@angular-devkit/build-angular:dev-server",
+          "options": {
+            "browserTarget": "memo-client:build"
+          },
+          "configurations": {
+            "production": {
+              "browserTarget": "memo-client:build:production"
+            }
+          }
+        },
+        "extract-i18n": {
+          "builder": "@angular-devkit/build-angular:extract-i18n",
+          "options": {
+            "browserTarget": "memo-client:build"
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": [
+              "apps/memo-client/tsconfig.app.json",
+              "apps/memo-client/tsconfig.spec.json",
+              "apps/memo-client/tsconfig.editor.json"
+            ],
+            "exclude": ["**/node_modules/**", "!apps/memo-client/**/*"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/memo-client/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    },
+    "memo-client-e2e": {
+      "root": "apps/memo-client-e2e",
+      "sourceRoot": "apps/memo-client-e2e/src",
+      "projectType": "application",
+      "architect": {
+        "e2e": {
+          "builder": "@nrwl/cypress:cypress",
+          "options": {
+            "cypressConfig": "apps/memo-client-e2e/cypress.json",
+            "tsConfig": "apps/memo-client-e2e/tsconfig.e2e.json",
+            "devServerTarget": "memo-client:serve"
+          },
+          "configurations": {
+            "production": {
+              "devServerTarget": "memo-client:serve:production"
+            }
+          }
+        },
+        "lint": {
+          "builder": "@angular-devkit/build-angular:tslint",
+          "options": {
+            "tsConfig": ["apps/memo-client-e2e/tsconfig.e2e.json"],
+            "exclude": ["**/node_modules/**", "!apps/memo-client-e2e/**/*"]
+          }
+        }
+      }
+    },
+    "api": {
+      "root": "apps/api",
+      "sourceRoot": "apps/api/src",
+      "projectType": "application",
+      "prefix": "api",
+      "schematics": {},
+      "architect": {
+        "build": {
+          "builder": "@nrwl/node:build",
+          "options": {
+            "outputPath": "dist/apps/api",
+            "main": "apps/api/src/main.ts",
+            "tsConfig": "apps/api/tsconfig.app.json",
+            "assets": ["apps/api/src/assets"]
+          },
+          "configurations": {
+            "production": {
+              "optimization": true,
+              "extractLicenses": true,
+              "inspect": false,
+              "fileReplacements": [
+                {
+                  "replace": "apps/api/src/environments/environment.ts",
+                  "with": "apps/api/src/environments/environment.prod.ts"
+                }
+              ]
+            }
+          }
+        },
+        "serve": {
+          "builder": "@nrwl/node:execute",
+          "options": {
+            "buildTarget": "api:build"
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": ["apps/api/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "options": {
+            "jestConfig": "apps/api/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      }
+    }
+  },
+  "cli": {
+    "defaultCollection": "@nrwl/angular",
+    "analytics": "f009f570-50ed-4bed-8472-4256cb2c9190"
+  },
+  "schematics": {
+    "@nrwl/angular:application": {
+      "unitTestRunner": "jest",
+      "e2eTestRunner": "cypress"
+    },
+    "@nrwl/angular:library": {
+      "unitTestRunner": "jest"
+    }
+  },
+  "defaultProject": "memo-client"
+}
